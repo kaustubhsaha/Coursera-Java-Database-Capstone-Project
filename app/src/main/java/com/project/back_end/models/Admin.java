@@ -27,8 +27,8 @@ public class Admin {
 
     // Parameterized constructor for convenience
     public Admin(String username, String password) {
-        this.username = username;
-        this.password = password;
+        setUsername(username);
+        setPassword(password);
     }
 
     // Getters and Setters

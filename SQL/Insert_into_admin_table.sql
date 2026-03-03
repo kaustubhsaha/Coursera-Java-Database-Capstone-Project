@@ -1,3 +1,3 @@
 -- Insert into admin table
-INSERT INTO admin (username, password)
+INSERT INTO admins (username, password)
 VALUES ('admin', 'admin@1234');

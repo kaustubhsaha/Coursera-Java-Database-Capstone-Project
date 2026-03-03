@@ -1,5 +1,5 @@
 -- Insert into doctor_available_times table
-INSERT INTO doctor_available_times (doctor_id, available_times) VALUES
+INSERT INTO doctor_available_times (doctor_id, time_slot) VALUES
 (1, '09:00-10:00'), (1, '10:00-11:00'), (1, '11:00-12:00'), (1, '14:00-15:00'),
 (2, '10:00-11:00'), (2, '11:00-12:00'), (2, '14:00-15:00'), (2, '15:00-16:00'),
 (3, '09:00-10:00'), (3, '11:00-12:00'), (3, '14:00-15:00'), (3, '16:00-17:00'),

@@ -1,12 +1,11 @@
 package com.project.back_end.services;
 
-import com.project.back_end.DTO.AppointmentDTO;
+import com.project.back_end.dto.AppointmentDTO;
 import com.project.back_end.models.Appointment;
 import com.project.back_end.models.Doctor;
 import com.project.back_end.models.Patient;
 import com.project.back_end.repo.AppointmentRepository;
 import com.project.back_end.repo.PatientRepository;
-import com.project.back_end.services.TokenService;
 import jakarta.transaction.Transactional;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

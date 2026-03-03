@@ -8,7 +8,7 @@ BEGIN
         doctor_id, 
         COUNT(patient_id) AS patients_seen
     FROM
-        appointment
+        appointments
     WHERE
         YEAR(appointment_time) = input_year
     GROUP BY
