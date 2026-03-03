@@ -2,6 +2,7 @@ package com.project.back_end.repo;
 
 import com.project.back_end.models.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +21,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 
     // 4. Find doctors by specialty (case-insensitive)
     List<Doctor> findBySpecialtyIgnoreCase(String specialty);
+
+    @Query("SELECT d FROM Doctor d LEFT JOIN FETCH d.availableTimes")
+    List<Doctor> findAll();
 }
