@@ -115,7 +115,7 @@ public class DoctorService {
         if (doctor == null || !doctor.getPassword().equals(password)) {
             return "Invalid email or password";
         }
-        return tokenService.generateToken(String.valueOf(doctor.getId()));
+        return tokenService.generateToken(doctor.getId(), "doctor", doctor.getEmail());
     }
 
     // 10. Find doctors by name
@@ -135,9 +135,15 @@ public class DoctorService {
     public List<Doctor> filterDoctorsByTime(List<Doctor> doctors, String timePeriod) {
         return doctors.stream().filter(doctor ->
                 doctor.getAvailableTimes().stream().anyMatch(timeStr -> {
-                    LocalTime time = LocalTime.parse(timeStr);
-                    return timePeriod.equalsIgnoreCase("AM") ? time.isBefore(LocalTime.NOON)
-                            : time.isAfter(LocalTime.NOON);
+                    try {
+                        // Handle time ranges like "10:00-11:00" by taking the start time
+                        String startTime = timeStr.contains("-") ? timeStr.split("-")[0] : timeStr;
+                        LocalTime time = LocalTime.parse(startTime);
+                        return timePeriod.equalsIgnoreCase("AM") ? time.isBefore(LocalTime.NOON)
+                                : time.isAfter(LocalTime.NOON);
+                    } catch (Exception e) {
+                        return false; // Skip invalid time formats
+                    }
                 })
         ).collect(Collectors.toList());
     }
@@ -175,4 +181,3 @@ public class DoctorService {
         return filterDoctorsByTime(allDoctors, timePeriod);
     }
 }
-

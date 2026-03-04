@@ -37,15 +37,6 @@ public class TokenService {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String email) {
-        return Jwts.builder()
-                .subject(email)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7))
-                .signWith(getSigningKey()) // clean & modern
-                .compact();
-    }    
-
     public String extractEmail(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey()) // No more error now
@@ -58,51 +49,47 @@ public class TokenService {
     public boolean validateToken(String token,String user) {
         try {
             String extracted = extractEmail(token);
-            if(user.equals("admin"))
-            {
-                Admin admin =adminRepository.findByUsername(extracted);
-                if(admin!=null)
-                {
-                    return true;
+            return switch (user) {
+                case "admin" -> {
+                    Admin admin = adminRepository.findByUsername(extracted);
+                    yield admin != null;
                 }
-            }
-            else if(user.equals("doctor"))
-            {
-                Doctor doctor=doctorRepository.findByEmail(extracted);
-                if(doctor!=null)
-                {
-                    return true;
+                case "doctor" -> {
+                    Doctor doctor = doctorRepository.findByEmail(extracted);
+                    yield doctor != null;
                 }
-            }
-            else if(user.equals("patient"))
-            {
-                Patient patient=patientRepository.findByEmail(extracted);
-                if(patient!=null)
-                {
-                    return true;
+                case "patient" -> {
+                    Patient patient = patientRepository.findByEmail(extracted);
+                    yield patient != null;
                 }
-            }
-
-            return false;
+                default -> false;
+            };
         } catch (Exception e) {
             return false;
         }
     }
 
     public String extractEmailFromToken(String token) {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'extractEmailFromToken'");
+        return extractEmail(token);
     }
 
-    public String generateToken(Object object, String string, String username) {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'generateToken'");
+    public String generateToken(Object id, String role, String email) {
+        return Jwts.builder()
+                .subject(email)
+                .claim("role", role)
+                .claim("id", id)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7))
+                .signWith(getSigningKey())
+                .compact();
     }
 
     public Long extractDoctorIdFromToken(String token) {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'extractDoctorIdFromToken'");
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("id", Long.class);
     }
-
-   
 }

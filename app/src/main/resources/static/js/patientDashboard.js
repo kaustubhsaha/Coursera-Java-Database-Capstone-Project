@@ -94,7 +94,7 @@ window.signupPatient = async function () {
     const { success, message } = await patientSignup(data);
     if (success) {
       alert(message);
-      document.getElementById("modal").style.display = "none";
+      document.getElementById("modal-overlay").style.display = "none";
       window.location.reload();
     }
     else alert(message);
@@ -118,10 +118,10 @@ window.loginPatient = async function () {
     console.log("Status Code:", response.status);
     console.log("Response OK:", response.ok);
     if (response.ok) {
-      const result = await response.json();
-      console.log(result);
+      const token = await response.text();
+      console.log(token);
       selectRole('loggedPatient');
-      localStorage.setItem('token', result.token)
+      localStorage.setItem('token', token)
       window.location.href = '/pages/loggedPatientDashboard.html';
     } else {
       alert('❌ Invalid credentials!');
